@@ -90,7 +90,8 @@ args.file_dir = os.path.dirname(os.path.realpath('__file__'))
 args.res_dir = os.path.join(args.file_dir, 'results/{}{}'.format(args.data_name,args.save_appendix))
 args.model_dir = os.path.join(args.file_dir, 'results/{}{}'.format(args.load_model_name,args.save_appendix))
 args.data_dir = os.path.join(args.file_dir, 'OCB/{}'.format(args.data_fold_name))
-
+if not os.path.exists(args.res_dir):
+    os.makedirs(args.res_dir) 
 
 if args.model.startswith('CktGNN'):
      nvt = 26
