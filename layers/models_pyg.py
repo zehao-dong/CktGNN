@@ -477,7 +477,7 @@ class DVAE_PYG(nn.Module):
 
         res = -res  # convert likelihood to loss
         kld = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-        return res + beta*kld, res, kld, res_vll, 0, res_vl2
+        return res + beta*kld, res, kld, res_vll, torch.FloatTensor([0]), res_vl2
 
     # def loss(self, mu, logvar, G_true, beta=0.005):
     #     # compute the loss of decoding mu and logvar to true graphs using teacher forcing
