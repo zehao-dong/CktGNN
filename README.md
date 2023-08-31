@@ -1,12 +1,12 @@
 # CktGNN
-CktGNN is a two-level GNN model with a pre-designed subgraph basis for the analog circuit (DAG) encoding. CktGNN simultaneously optimizes circuit topology and device features, achieving state-of-art performance in analog circuit optimization. <br/>Source code for ICLR 2022 paper: 'CktGNN: Circuit Graph Neural Network for Electronic Design Automation' (https://openreview.net/forum?id=NE2911Kq1sp).
+CktGNN is a two-level GNN model with a pre-designed subgraph basis for the analog circuit (DAG) encoding. CktGNN simultaneously optimizes circuit topology and device features, achieving state-of-art performance in analog circuit optimization. <br/>Source code for ICLR 2023 paper: 'CktGNN: Circuit Graph Neural Network for Electronic Design Automation' (https://openreview.net/forum?id=NE2911Kq1sp).
 
 
 ## OCB: Open Circuit Benchmark
 
 * OCB is the first open benchmark dataset for analog circuits (i.e. operational amplifiers (Op-Amps)), equipped with circuit generation code, evaluation code, and transformation code that converts simulation results to different graph datasets (i.e. igraph, ptgraph, tensor.) Currently, OCB collects two datasets, Ckt-Bench-101 and Ckt-Bench-301 for the general-prpose graph learning tasks on circuits. 
 
-* Ckt-Bench-101 (directory: `/OCB/CktBench101`): Ckt-Bench-101 is generated based on the dataset used in our ICLR 2022 paper. Ckt-Bench-101 contains 10000 different circuits, and it eliminates invalid circuits in the datasets used in the ICLR 2022 paper and replace them with new valid simulations. 
+* Ckt-Bench-101 (directory: `/OCB/CktBench101`): Ckt-Bench-101 is generated based on the dataset used in our ICLR 2022 paper. Ckt-Bench-101 contains 10000 different circuits, and it eliminates invalid circuits in the datasets used in our ICLR 2023 paper and replace them with new valid simulations. 
 
 * Ckt-Bench-301 (directory: `/OCB/CktBench301`): Ckt-Bench-301 contains 50000 circuits. Circuits in Ckt-Bench-301 and in Ckt-Bench-101 have different device features and circuit topologies. This benchmark dataset is proposed to perform the Bayesian optimization, as it might be hard to implement simulation code on the circuit simulators without relevant expertise.
 
