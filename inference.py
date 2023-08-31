@@ -11,7 +11,6 @@ from tqdm import tqdm
 import itertools
 from scipy.spatial.distance import pdist
 import matplotlib.pyplot as plt
-from sparse_gp import SparseGP
 import scipy.stats as sps
 import numpy as np
 import scipy.io
@@ -20,8 +19,10 @@ from scipy.stats import pearsonr
 sys.path.append('%s/../software/enas' % os.path.dirname(os.path.realpath(__file__))) 
 sys.path.append('%s/..' % os.path.dirname(os.path.realpath(__file__))) 
 sys.path.insert(0, '../')
-from models_v1 import *
-from dagnn import DAGNN
+from utils import *
+from layers.models_ig import CktGNN, DVAE
+from layers.dagnn_pyg import DAGNN
+from layers.constants import *
 from copy import deepcopy
 
 '''Experiment settings'''
