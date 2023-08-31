@@ -167,7 +167,7 @@ else:
      nvt = 10
      START_TYPE = 8
      END_TYPE = 9
-     max_n = 8
+     max_n = 24
      subn_nvt=103
      subg = False
 
