@@ -11,7 +11,7 @@ from tqdm import tqdm
 import itertools
 from scipy.spatial.distance import pdist
 import matplotlib.pyplot as plt
-from sparse_gp import SparseGP
+from search_methods.sparse_gp import SparseGP
 import scipy.stats as sps
 import numpy as np
 import scipy.io
