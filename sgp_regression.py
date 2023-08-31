@@ -269,7 +269,7 @@ for rand_idx in range(1,10):
      np.random.seed(random_seed)
 
      if args.model.startswith('CktGNN'):
-         model = CktGNN_sep(
+         model = CktGNN(
             max_n = max_n, 
             max_pos = max_pos,
             nvt = nvt, 
@@ -283,7 +283,7 @@ for rand_idx in range(1,10):
             pos=True
             )
      elif args.model.startswith('DAGNN'):
-         model = eval(args.model)(
+         model = DAGNN(
             emb_dim = 10, 
             hidden_dim = args.hs, 
             out_dim = args.hs,
