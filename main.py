@@ -45,6 +45,8 @@ parser.add_argument('--reprocess', action='store_true', default=False,
                     help='if True, reprocess data instead of using prestored .pkl data')
 parser.add_argument('--no-test', action='store_true', default=False,
                     help='if True, merge test with train, i.e., no held-out set')
+parser.add_argument('--keep-old', action='store_true', default=False,
+                    help='if True, do not remove any old data in the result folder')
 
 # model settings
 parser.add_argument('--model', default='CktGNN', help='model to use: CKTGNN, PACE, DAGNN, DVAE...')
@@ -236,6 +238,8 @@ def train(epoch):
     train_loss = 0
     recon_loss = 0
     kld_loss = 0
+    type_loss = 0
+    pos_loss = 0
     shuffle(train_data)
     pbar = tqdm(train_data)
     g_batch = []
