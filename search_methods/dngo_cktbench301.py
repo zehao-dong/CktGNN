@@ -10,7 +10,7 @@ import numpy as np
 from collections import defaultdict
 from search_methods.utils_search import *
 
-def dngo_expected_improvement_search(embedding_path, total_rounds, save_path, init_size, k, seed):
+def dngo_expected_improvement_search(embedding_path, total_rounds, save_path, init_size, k, seed, epochs):
     """ implementation of CATE-DNGO-LS on the NAS-Bench-101 search space """
     BEST_FOM = 197.22961595458466
     PREV_BEST = 0
@@ -49,7 +49,7 @@ def dngo_expected_improvement_search(embedding_path, total_rounds, save_path, in
         print(feat_samples.shape)
         print(valid_fom_samples.shape)
         print('begin training BO model')
-        model = DNGO(num_epochs=args.epochs, n_units_1=128, n_units_2=128, n_units_3=128, do_mcmc=False, normalize_output=False)
+        model = DNGO(num_epochs=epochs, n_units_1=128, n_units_2=128, n_units_3=128, do_mcmc=False, normalize_output=False)
         model.train(X=feat_samples.numpy(), y=valid_fom_samples.view(-1).numpy(), do_optimize=True)
         print('BO model training finished')
         #print(model.network)
