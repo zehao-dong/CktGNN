@@ -45,7 +45,7 @@ for run in range(args.runs):
     if args.search_method == 'bo':
         bo_expected_improvement_search(embedding_path, args.rounds, save_path, args.init_size, args.topk, run)
     elif args.search_method == 'dngo':
-        dngo_expected_improvement_search(embedding_path, args.rounds, save_path, args.init_size, args.topk, run)
+        dngo_expected_improvement_search(embedding_path, args.rounds, save_path, args.init_size, args.topk, run, epochs=args.epochs)
 
 
 
