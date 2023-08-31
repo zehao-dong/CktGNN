@@ -93,15 +93,6 @@ args.data_dir = os.path.join(args.file_dir, 'OCB/{}'.format(args.data_fold_name)
 if not os.path.exists(args.res_dir):
     os.makedirs(args.res_dir) 
 
-if args.model.startswith('CktGNN'):
-     nvt = 26
-     START_TYPE = 0
-     END_TYPE = 1
-else:
-     nvt = 10
-     START_TYPE = 8
-     END_TYPE = 9
-
 data_name = args.data_name
 if args.model.startswith('SVAE'):
     data_type = 'tensor'
@@ -139,7 +130,7 @@ else:
      nvt = 10
      START_TYPE = 8
      END_TYPE = 9
-     max_n = 8
+     max_n = 24
      subn_nvt=103
      subg = False
 
