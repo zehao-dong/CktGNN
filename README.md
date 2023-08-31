@@ -4,7 +4,7 @@ CktGNN is a two-level GNN model with a pre-designed subgraph basis for the analo
 
 ## OCB: Open Circuit Benchmark
 
-* OCB is the first open benchmark dataset for analog circuits (i.e. operational amplifiers (Op-Amps)), equipped with circuit generation code, evaluation code, and transformation code that convert simulation results to different graph datasets (i.e. igraph, ptgraph, tensor.) Currently, OCB collects two datasets, Ckt-Bench-101 and Ckt-Bench-301 for the general-prpose graph learning tasks on circuits. 
+* OCB is the first open benchmark dataset for analog circuits (i.e. operational amplifiers (Op-Amps)), equipped with circuit generation code, evaluation code, and transformation code that converts simulation results to different graph datasets (i.e. igraph, ptgraph, tensor.) Currently, OCB collects two datasets, Ckt-Bench-101 and Ckt-Bench-301 for the general-prpose graph learning tasks on circuits. 
 
 * Ckt-Bench-101 (directory: `/OCB/CktBench101`): Ckt-Bench-101 is generated based on the dataset used in our ICLR 2022 paper. Ckt-Bench-101 contains 10000 different circuits, and it eliminates invalid circuits in the datasets used in the ICLR 2022 paper and replace them with new valid simulations. 
 
