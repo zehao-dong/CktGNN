@@ -13,7 +13,7 @@ import scipy.io
 from scipy.linalg import qr 
 import igraph
 from random import shuffle
-mport torch
+import torch
 from torch import nn, optim
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import matplotlib
