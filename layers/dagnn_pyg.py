@@ -9,9 +9,9 @@ from torch_geometric.utils import softmax
 from torch_geometric.nn.glob import *
 from torch_geometric.nn import MessagePassing
 
-from models_pyg import DVAE_BN_PYG
-from constants import *
-from batch import Batch
+from layers.models_pyg import DVAE_BN_PYG
+from layers.constants import *
+from layers.batch import Batch
 
 
 # this model is adjusted based on DAGNN https://github.com/vthost/DAGNN
