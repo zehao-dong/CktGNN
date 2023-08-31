@@ -261,7 +261,7 @@ perform_df = pd.read_csv(perf_name)
 for rand_idx in range(1,10):
      print('START FOLD: {}'.format(rand_idx))
 
-     save_dir = os.path.join(args.res_dir,'sgp_reg_{}_{}/'.format(save_appendix, rand_idx))
+     save_dir = os.path.join(args.res_dir,'sgp_reg_{}_{}/'.format(args.save_appendix, rand_idx))
      # set seed
      random_seed = rand_idx
      torch.manual_seed(random_seed)
@@ -314,7 +314,7 @@ for rand_idx in range(1,10):
          )
     
      model.to(device)
-     load_module_state(model, os.path.join(args.res_dir, 'model_checkpoint{}.pth'.format(checkpoint)), device=device)
+     load_module_state(model, os.path.join(args.res_dir, 'model_checkpoint{}.pth'.format(args.checkpoint)), device=device)
      X_train, Y_train, Gain_train, BW_train, PM_train = extract_latent(train_data, perform_df, 0)
      X_test, Y_test, Gain_test, BW_test, PM_test = extract_latent(test_data, perform_df, 9000)
 
