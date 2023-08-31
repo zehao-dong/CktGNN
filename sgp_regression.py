@@ -254,7 +254,6 @@ def save_latent_representations(epoch, perform_df):
 lr = 0.0005  # the learning rate to train the SGP model 0.0005
 max_iter = 100  # how many iterations to optimize the SGP each time
 
-#data = loadmat(data_dir + '{}_latent_epoch{}.mat'.format(data_name, checkpoint))  # load train/test data
 #perform_df = performance_readout(args.ng, file_dir=args.data_dir)
 perf_name = os.path.join(args.data_dir, 'perform101.csv')
 perform_df = pd.read_csv(perf_name)
@@ -269,16 +268,6 @@ for rand_idx in range(1,10):
      torch.cuda.manual_seed(random_seed)
      np.random.seed(random_seed)
 
-     # load the decoder
-     #model = eval(model_name)(
-     #        max_n=max_n, 
-     #        nvt=nvt, 
-     #        START_TYPE=START_TYPE, 
-     #        END_TYPE=END_TYPE, 
-     #        hs=hs, 
-     #        nz=nz, 
-     #        bidirectional=bidir, 
-     #       )
      if args.model.startswith('CktGNN'):
          model = CktGNN_sep(
             max_n = max_n, 
@@ -323,8 +312,6 @@ for rand_idx in range(1,10):
          hs=args.hs, 
          nz=args.nz
          )
-
-
     
      model.to(device)
      load_module_state(model, os.path.join(args.res_dir, 'model_checkpoint{}.pth'.format(checkpoint)), device=device)
