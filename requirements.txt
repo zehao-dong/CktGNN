@@ -1,0 +1,15 @@
+pytorch
+torch-scatter
+torch-sparse
+torch-cluster
+torch-spline-conv
+torch-geometric
+gensim
+tqdm
+pandas
+numpy
+scipy
+networkx
+scikit_learn
+torchvision
+python-igraph
