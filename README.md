@@ -38,8 +38,8 @@ Make sure that `--save-appendix --model --hs` are consistent with previous exper
 
 * Implement Bayesian optimization on Ckt-Bench-301 to find the optimal circuits with the higest FoM. 
 
-First, run `python inference.py --checkpoint 300 -save-appendix _cktgnn --model CktGNN --hs 301 ` to generate the embeddings in the latent space (by the selected circuit encoder).
+First, run `python inference.py --checkpoint 300 --save-appendix _cktgnn --model CktGNN --hs 301 ` to generate the embeddings in the latent space (by the selected circuit encoder).
 
-Second, run `python bo_search.py  -save-appendix _cktgnn --model CktGNN  --search-method bo` to search the optimal circuit in Ckt-Bench-301. Expctation improvement searching is used, and users can use `--search-method` to choose the Byesian optimization model (bo = Bohamiann, dngo = DNGO).
+Second, run `python bo_search.py  --save-appendix _cktgnn --model CktGNN  --search-method bo` to search the optimal circuit in Ckt-Bench-301. Expctation improvement searching is used, and users can use `--search-method` to choose the Byesian optimization model (bo = Bohamiann, dngo = DNGO).
 
 Please leave an issue if you have any trouble running the code or suggestions for improvements.
