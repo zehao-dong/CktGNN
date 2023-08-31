@@ -100,7 +100,7 @@ else:
      START_TYPE = 8
      END_TYPE = 9
 
-
+data_name = args.data_name
 if args.model.startswith('SVAE'):
     data_type = 'tensor'
     data_name += '_tensor'
@@ -111,7 +111,7 @@ else:
     data_type = 'igraph'
 
 # cLoad dataset
-pkl_name = os.path.join(args.data_dir, args.data_name + '.pkl')
+pkl_name = os.path.join(args.data_dir, data_name + '.pkl')
 with open(pkl_name, 'rb') as f:
     all_dataset =  pickle.load(f)
 
