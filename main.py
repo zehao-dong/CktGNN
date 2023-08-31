@@ -354,7 +354,7 @@ for epoch in range(start_epoch + 1, args.epochs + 1):
 
 '''Testing begins here'''
 Nll, acc = test()
-r_valid_dag, r_valid_ckt, r_novel = prior_validity(train_data, model, infer_batch_size=self.infer_batch_size, 
+r_valid_dag, r_valid_ckt, r_novel = prior_validity(train_data, model, infer_batch_size=args.infer_batch_size, 
     data_type=data_type,  subg=subg, device=device, scale_to_train_range=True)
 
 test_results_name = os.path.join(args.res_dir, 'decode_results.txt')
