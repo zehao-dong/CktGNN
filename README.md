@@ -10,7 +10,7 @@ CktGNN is a two-level GNN model with a pre-designed subgraph basis for the analo
 
 * Ckt-Bench-301 (directory: `/OCB/CktBench301`): Ckt-Bench-301 contains 50000 circuits. Circuits in Ckt-Bench-301 and in Ckt-Bench-101 have different device features and circuit topologies. This benchmark dataset is proposed to perform the Bayesian optimization, as it might be hard to implement simulation code on the circuit simulators without relevant expertise.
 
-* Source code (directory: `/OCB/src`): The source codes enable users to construct their own analog circuit datasets of arbitrary size. The folder 'simulator' provides simulation codes for circuit simulators. [circuit_generation.py](circuit_generation.py) generates circuits and writes them in .txt file. [utils_src.py](utils_src.py) includes functions (train_test_generator_topo_simple) that convert the txt circuits and relevant simulation results to igraph data.
+* Source code (directory: `/OCB/src`): The source codes enable users to construct their own analog circuit datasets of arbitrary size. The folder 'simulator' provides simulation codes for circuit simulators. [circuit_generation.py]( `/OCB/src/circuit_generation.py`) generates circuits and writes them in .txt file. [utils_src.py](`/OCB/src/utils_src.py`) includes functions (train_test_generator_topo_simple) that convert the txt circuits and relevant simulation results to igraph data.
 
 
 ## Environment
