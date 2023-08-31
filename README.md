@@ -8,9 +8,9 @@ CktGNN is a two-level GNN model with a pre-designed subgraph basis for the analo
 
 * Ckt-Bench-101 (directory: `/OCB/CktBench101`): Ckt-Bench-101 is generated based on the dataset used in our ICLR 2022 paper. Ckt-Bench-101 contains 10000 different circuits, and it eliminates invalid circuits in the datasets used in the ICLR 2022 paper and replace them with new valid simulations. 
 
-* Ckt-Bench-301 (directory: `/OCB/CktBench301`): Ckt-Bench-301 contains 50000 circuits. Circuits in Ckt-Bench-301 and in Ckt-Bench-101 have different combinations of device features and circuit topology. This benchmark dataset is proposed to perform the Bayesian optimization for the machine learning community, as it is not straightforward to implement simulation code on the circuit simulators without relevant expertise.
+* Ckt-Bench-301 (directory: `/OCB/CktBench301`): Ckt-Bench-301 contains 50000 circuits. Circuits in Ckt-Bench-301 and in Ckt-Bench-101 have different device features and circuit topologies. This benchmark dataset is proposed to perform the Bayesian optimization, as it might be hard to implement simulation code on the circuit simulators without relevant expertise.
 
-* Source code (directory: `/OCB/src`): The source codes enable users to construct their own analog circuit datasets of arbitrary size. The folder 'simulator' provides simulation codes for circuit simulators. [circuit_generation.py](circuit_generation.py) generates circuits and weite them in .txt file. [utils_src.py](utils_src.py) includes functions (train_test_generator_topo_simple) that convert the txt circuits and relevant simulation results to igraph data.
+* Source code (directory: `/OCB/src`): The source codes enable users to construct their own analog circuit datasets of arbitrary size. The folder 'simulator' provides simulation codes for circuit simulators. [circuit_generation.py](circuit_generation.py) generates circuits and writes them in .txt file. [utils_src.py](utils_src.py) includes functions (train_test_generator_topo_simple) that convert the txt circuits and relevant simulation results to igraph data.
 
 
 ## Environment
@@ -30,7 +30,7 @@ User can select different models (e.g. DVAE, DAGNN ..) and uses the correspondin
 
 `python sgp_regression.py --checkpoint 300 --save_appendix _cktgnn --model CktGNN --hs 301`
 
-Make sure that `--save_appendix --model --hs` are consistent with previous experiment, and `--checkpoint` equals to the `--epoch`.
+Make sure that `--save_appendix --model --hs` are consistent with previous experiment, and set `--checkpoint` equals to the `--epoch`.
 
 ## Experiments on Ckt-Bench-301
 
