@@ -1067,7 +1067,7 @@ class DVAE(nn.Module):
 
         res = -res  # convert likelihood to loss
         kld = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-        return res + beta*kld, res, kld, res_vll, 0, res_vl2
+        return res + beta*kld, res, kld, res_vll, torch.FloatTensor([0]), res_vl2
 
     def encode_decode(self, G):
         mu, logvar = self.encode(G)
