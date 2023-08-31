@@ -730,7 +730,8 @@ class DVAE(nn.Module):
         
         self.vs = hs 
         if self.vid:
-            self.nvt += self.max_n
+            self.vs += max_n
+
 
         # 0. encoding-related
         self.grue_forward = nn.GRUCell(self.nvt + 1, hs)  # encoder GRU
