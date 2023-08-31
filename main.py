@@ -98,34 +98,6 @@ np.random.seed(args.seed)
 random.seed(args.seed)
 print(args)
 
-SUBG_INDI = {0: [],
- 1: [],
- 2: [0],
- 3: [1],
- 4: [0, 1],
- 5: [0, 1],
- 6: [2],
- 7: [2],
- 8: [2],
- 9: [2],
- 10: [1, 2],
- 11: [1, 2],
- 12: [1, 2],
- 13: [1, 2],
- 14: [0, 2],
- 15: [0, 2],
- 16: [0, 2],
- 17: [0, 2],
- 18: [1, 0, 2],
- 19: [1, 0, 2],
- 20: [1, 0, 2],
- 21: [1, 0, 2],
- 22: [1, 0, 2],
- 23: [1, 0, 2],
- 24: [1, 0, 2],
- 25: [1, 0, 2]
- }
-
 args.file_dir = os.path.dirname(os.path.realpath('__file__'))
 args.res_dir = os.path.join(args.file_dir, 'results/{}{}'.format(args.data_name,args.save_appendix))
 args.data_dir = os.path.join(args.file_dir, 'OCB/{}'.format(args.data_fold_name))
@@ -134,7 +106,7 @@ if not os.path.exists(args.res_dir):
     os.makedirs(args.res_dir)  
 
 # Loading datasets:
-# 1. igraph dataset:  dataset[0] = train set, dataset[1] = test set, each item is a pair (DAG of subgraphs for CktGNN, original DAG)
+# 1. igraph dataset:  dataset[0] = train set, dataset[1] = test set, each item is a pair (DAG of subgraphs for CktGNN, original igraph DAG)
 # 2. pygraph datasets: dataset[0] = train set, dataset[1] = test set, each item is a pygraph Data
 data_name = args.data_name
 if args.model.startswith('SVAE'):
