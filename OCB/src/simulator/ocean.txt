@@ -1,0 +1,24 @@
+simulator( 'spectre )
+design(	 "/home/research/WG-caow/simulation/test/spectre/schematic/netlist/netlist")
+resultsDir( "/home/research/WG-caow/simulation/test/spectre/schematic" )
+analysis('ac ?start "1"  ?stop "100G"  ?dec "100"  )
+desVar(	  "wireopt" 211	)
+envOption(
+	'analysisOrder  list("ac") 
+)
+temp( 27 ) 
+out = outfile("/home/research/WG-caow/weidong_design/gnn_cir_training/results.csv" "a")
+run()
+
+
+results()
+selectResults('ac)
+outputs()
+ocnPrint(?output out value(dB20(VF("/OUT")/VF("/net2")) 0 ) )
+
+ocnPrint(?output out phaseMargin(VF("/OUT")/VF("/net2")) ) 
+
+ocnPrint(?output out unityGainFreq(VF("/OUT")/VF("/net2")) ) 
+
+
+close(out)

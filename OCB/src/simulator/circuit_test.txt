@@ -1,0 +1,31 @@
+// Library name: GNN_Circuit 
+// Cell name: behavioral_op_amp 
+// View name: schematic 
+subckt tc_stage_7_0 GND OUT IN 
+    G0 (OUT GND IN GND) vccs gm=-1.0m
+    R0 (OUT GND) resistor r=1M 
+    C0 (OUT GND) capacitor c=50.0f 
+ends tc_stage_7_0 
+subckt tc_stage_6_0 GND OUT IN 
+    G0 (OUT GND IN GND) vccs gm=0.8m
+    R0 (OUT GND) resistor r=1M 
+    C0 (OUT GND) capacitor c=50.0f 
+ends tc_stage_6_0 
+subckt tc_stage_9_0 GND OUT IN 
+    G0 (OUT GND IN GND) vccs gm=-0.1m
+    R0 (OUT GND) resistor r=1M 
+    C0 (OUT GND) capacitor c=50.0f 
+ends tc_stage_9_0 
+subckt single_r_2_0 IN OUT 
+    R0 (IN OUT) resistor r=0.4M
+ends single_r_2_0 
+
+// Library name: GNN_Circuit 
+// Cell name: behavioral_op_amp_test 
+// View name: schematic 
+I0 (0 net3 net2) tc_stage_7_0
+I1 (0 OUT net3) tc_stage_6_0
+I2 (0 net2 OUT) tc_stage_9_0
+I3 (net3 OUT) single_r_2_0
+V0 (net2 0) vsource dc=0 mag=1m type=sine ampl=1m freq=1K 
+
