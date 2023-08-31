@@ -553,3 +553,202 @@ class DVAE_PYG(nn.Module):
     #     sample = torch.randn(n, self.nz).to(self.get_device())
     #     G = self.decode(sample)
     #     return G
+
+class DVAE_BN_PYG(DVAE_PYG):
+    def __init__(self, max_n, nvt, START_TYPE, END_TYPE, hs=501, nz=56, bidirectional=False, num_layers=1, aggx=1):
+        super(DVAE_BN_PYG, self).__init__(max_n, nvt, START_TYPE, END_TYPE, hs, nz, bidirectional, vid=False, num_layers=num_layers)
+        self.mapper_forward = nn.ModuleList([nn.Sequential(
+                nn.Linear(self.nvt if aggx or l==0 else hs, hs, bias=False),  #nn.Linear(self.nvt, hs, bias=False),
+                ) for l in range(num_layers)]) # disable bias to ensure padded zeros also mapped to zeros
+        self.mapper_backward = nn.ModuleList([nn.Sequential(
+                nn.Linear(self.nvt if aggx or l==0 else hs, hs, bias=False),
+                ) for l in range(num_layers)])
+        self.gate_forward = nn.ModuleList([nn.Sequential(
+                nn.Linear(self.nvt if aggx or l==0 else hs, hs),
+                nn.Sigmoid()
+                ) for l in range(num_layers)])
+        self.gate_backward = nn.ModuleList([nn.Sequential(
+                nn.Linear(self.nvt if aggx or l==0 else hs, hs),
+                nn.Sigmoid()
+                ) for l in range(num_layers)])
+        self.add_edge = nn.Sequential(
+                nn.Linear(hs * 3, hs), 
+                nn.ReLU(), 
+                nn.Linear(hs, 1)
+                )  # whether to add edge between v_i and v_new, f(hvi, hnew, h0)
+
+    def _get_zero_x(self, n=1):
+        # get zero predecessor states X, used for padding
+        return self._get_zeros(n, self.nvt)
+
+    def _get_graph_state(self, G, decode=False, start=0, end_offset=0):
+        # get the graph states
+        # sum all node states between start and n-end_offset as the graph state
+        Hg = []
+        max_n_nodes = max(g.x.shape[0] for g in G)
+        istr = str(self.num_layers - 1)
+        for g in G:
+            hg = torch.cat([g.vs[i]['H_forward'+istr] for i in range(start, g.x.shape[0] - end_offset)],
+                           0).unsqueeze(0)  # 1 * n * hs
+            if self.bidir and not decode:  # decoding never uses backward propagation
+                hg_b = torch.cat([g.vs[i]['H_backward'+istr]
+                                 for i in range(start, g.x.shape[0] - end_offset)], 0).unsqueeze(0)
+                hg = torch.cat([hg, hg_b], 2)
+            if g.x.shape[0] < max_n_nodes:
+                hg = torch.cat([hg, 
+                    torch.zeros(1, max_n_nodes - g.x.shape[0], hg.shape[2]).to(self.get_device())],
+                    1)  # 1 * max_n * hs
+            Hg.append(hg)
+        # sum node states as the graph state
+        Hg = torch.cat(Hg, 0).sum(1)  # batch * hs
+        if self.bidir and not decode:
+            Hg = self.hg_unify(Hg)
+        return Hg  # batch * hs
+
+    # from original, used in decoding
+    def _get_igraph_state(self, G, decode=False, start=0, end_offset=0):
+        # get the graph states
+        # sum all node states between start and n-end_offset as the graph state
+        Hg = []
+        max_n_nodes = max(g.vcount() for g in G)
+        istr = str(self.num_layers - 1)
+        for g in G:
+            hg = torch.cat([g.vs[i]['H_forward'+istr] for i in range(start, g.vcount() - end_offset)],
+                           0).unsqueeze(0)  # 1 * n * hs
+            if self.bidir and not decode:  # decoding never uses backward propagation
+                hg_b = torch.cat([g.vs[i]['H_backward'+istr]
+                                 for i in range(start, g.vcount() - end_offset)], 0).unsqueeze(0)
+                hg = torch.cat([hg, hg_b], 2)
+            if g.vcount() < max_n_nodes:
+                hg = torch.cat([hg,
+                    torch.zeros(1, max_n_nodes - g.vcount(), hg.shape[2]).to(self.get_device())],
+                    1)  # 1 * max_n * hs
+            Hg.append(hg)
+        # sum node states as the graph state
+        Hg = torch.cat(Hg, 0).sum(1)  # batch * hs
+        if self.bidir and not decode:
+            Hg = self.hg_unify(Hg)
+        return Hg  # batch * hs
+
+    def _propagate_to(self, G, v, propagator, H=None, reverse=False):
+        # propagate messages to vertex index v for all graphs in G
+        # return the new messages (states) at v
+        # the difference from original D-VAE is using predecessors' X instead of H
+        G = [g.to(self.get_device()) for g in G if g.x.shape[0] > v]
+        if len(G) == 0:
+            return
+        if H is not None:
+            idx = [i for i, g in enumerate(G) if g.x.shape[0] > v]
+            H = H[idx]
+        # v_types = [g.vs[v]['type'] for g in G]
+        # X = self._one_hot(v_types, self.nvt)
+        X = torch.stack([g.x[v] for g in G], dim=0)
+        Hv=X
+        for l in range(self.num_layers):
+            istr = str(l)
+            if reverse:
+                H_name = 'H_backward'+istr  # name of the hidden states attribute
+                # H_pred = [[self._one_hot(g.vs[x]['type'], self.nvt) for x in g.successors(v)]
+                #           for g in G]
+                H_pred = []
+                for g in G:
+                    np_idx = g.edge_index[0] == v
+                    np_idx = g.edge_index[1][np_idx]
+                    # np_idx = g.bi_node_parent_index[1][0] == v
+                    # np_idx = g.bi_node_parent_index[1][1][np_idx]
+                    H_pred += [g.x[np_idx]]
+
+                gate, mapper = self.gate_backward, self.mapper_backward
+            else:
+                H_name = 'H_forward'+istr  # name of the hidden states attribute
+                # H_pred = [[self._one_hot(g.vs[x]['type'], self.nvt) for x in g.predecessors(v)]
+                #           for g in G]
+                H_pred = []
+                for g in G:
+                    np_idx = g.edge_index[1] == v
+                    np_idx = g.edge_index[0][np_idx]
+                    # np_idx = g.bi_node_parent_index[0][0] == v
+                    # np_idx = g.bi_node_parent_index[0][1][np_idx]
+                    H_pred += [g.x[np_idx]]
+                gate, mapper = self.gate_forward, self.mapper_forward
+            # if h is not provided, use gated sum of v's predecessors' states as the input hidden state
+            if H is None:
+                max_n_pred = max([x.shape[0] for x in H_pred])  # maximum number of predecessors
+                if max_n_pred == 0:
+                    H = self._get_zero_hidden(len(G))
+                else:
+                    # H_pred = [torch.cat(h_pred +
+                    #           [self._get_zero_x((max_n_pred - len(h_pred)))], 0).unsqueeze(0)
+                    #           for h_pred in H_pred]
+                    H_pred = [torch.cat([h_pred, self._get_zero_x((max_n_pred - h_pred.shape[0]))], 0).unsqueeze(0)
+                              for h_pred in H_pred]
+                    H_pred = torch.cat(H_pred, 0)  # batch * max_n_pred * hs
+                    H = self._gated(H_pred, gate[l], mapper[l]) #.sum(1)  # batch * hs
+                    # print('gated3', H.shape)
+                    # print(H)
+                    H = H.sum(1)
+                    # print("h:\n",H)
+            Hv = propagator[l](Hv, H)
+            # print("r:\n",Hv)
+            for i, g in enumerate(G):
+                g.vs[v][H_name] = Hv[i:i+1]
+        return Hv
+
+    def _ipropagate_to(self, G, v, propagator, H=None, reverse=False):
+        # propagate messages to vertex index v for all graphs in G
+        # return the new messages (states) at v
+        # the difference from original D-VAE is using predecessors' X instead of H
+        G = [g for g in G if g.vcount() > v]
+        if len(G) == 0:
+            return
+        if H is not None:
+            idx = [i for i, g in enumerate(G) if g.vcount() > v]
+            H = H[idx]
+        v_types = [g.vs[v]['type'] for g in G]
+        X = self._one_hot(v_types, self.nvt)
+        if reverse:
+            H_name = 'H_backward'  # name of the hidden states attribute
+            H_pred = [[self._one_hot(g.vs[x]['type'], self.nvt) for x in g.successors(v)]
+                      for g in G]
+            gate, mapper = self.gate_backward[0], self.mapper_backward[0]
+        else:
+            H_name = 'H_forward'  # name of the hidden states attribute
+            H_pred = [[self._one_hot(g.vs[x]['type'], self.nvt) for x in g.predecessors(v)]
+                      for g in G]
+            gate, mapper = self.gate_forward[0], self.mapper_forward[0]
+        # if h is not provided, use gated sum of v's predecessors' states as the input hidden state
+        if H is None:
+            max_n_pred = max([len(x) for x in H_pred])  # maximum number of predecessors
+            if max_n_pred == 0:
+                H = self._get_zero_hidden(len(G))
+            else:
+                H_pred = [torch.cat(h_pred +
+                                    [self._get_zero_x((max_n_pred - len(h_pred)))], 0).unsqueeze(0)
+                          for h_pred in H_pred]
+                H_pred = torch.cat(H_pred, 0)  # batch * max_n_pred * hs
+                H = self._gated(H_pred, gate, mapper).sum(1)  # batch * hs
+        Hv = propagator[0](X, H)
+        for i, g in enumerate(G):
+            g.vs[v][H_name] = Hv[i:i + 1]
+        return Hv
+
+    def encode(self, G):
+        # encode graphs G into latent vectors
+        if type(G) != list:
+            G = [G]
+        # for g in G:
+        #     g.vs = [{} for _ in range(g.x.shape[0])]
+        self._propagate_from(G, 0, self.grue_forward, H0=self._get_zero_hidden(len(G)),
+                             reverse=False)
+        if self.bidir:
+            self._propagate_from(G, self.max_n-1, self.grue_backward, 
+                                 H0=self._get_zero_hidden(len(G)), reverse=True)
+        Hg = self._get_graph_state(G, start=1, end_offset=1)  # does not use the dummy input 
+                                                              # and output nodes
+        mu, logvar = self.fc1(Hg), self.fc2(Hg) 
+        return mu, logvar
+
+    def _get_edge_score(self, Hvi, H, H0):
+        # when decoding BN edges, we need to include H0 since the propagation D-separates H0
+        # such that Hvi and H do not contain any initial H0 information
+        return self.sigmoid(self.add_edge(torch.cat([Hvi, H, H0], 1)))
