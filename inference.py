@@ -188,7 +188,7 @@ else:
         )
 
 
-load_module_state(model, os.path.join(args.model_dir, 'model_checkpoint{}.pth'.format(epoch)), device)
+load_module_state(model, os.path.join(args.model_dir, 'model_checkpoint{}.pth'.format(args.checkpoint)), device)
 
 # load performance of circuits
 perf_name = os.path.join(args.data_dir, 'perform301.csv')
