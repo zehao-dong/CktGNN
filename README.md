@@ -1,5 +1,5 @@
 # CktGNN
-CktGNN is a two-level GNN model with a pre-designed subgraph basis for the analog circuit (DAG) encoding. CktGNN simultaneously optimizes circuit topology and device features, achieving state-of-art performance in analog circuit optimization. <br/>Source code for ICLR 2023 paper: 'CktGNN: Circuit Graph Neural Network for Electronic Design Automation' (https://openreview.net/forum?id=NE2911Kq1sp).
+CktGNN is a two-level GNN model with a pre-designed subgraph basis for the analog circuit (DAG) encoding. CktGNN simultaneously optimizes circuit topology and device features, achieving state-of-art performance in analog circuit optimization. <br/>For more information, please check our ICLR 2023 paper: 'CktGNN: Circuit Graph Neural Network for Electronic Design Automation' (https://openreview.net/forum?id=NE2911Kq1sp).
 
 
 ## OCB: Open Circuit Benchmark
@@ -43,3 +43,17 @@ First, run `python inference.py --checkpoint 300 --save-appendix _cktgnn --model
 Second, run `python bo_search.py  --save-appendix _cktgnn --model CktGNN  --search-method bo` to search the optimal circuit in Ckt-Bench-301. Expctation improvement searching is used, and users can use `--search-method` to choose the Byesian optimization model (bo = Bohamiann, dngo = DNGO).
 
 Please leave an issue if you have any trouble running the code or suggestions for improvements.
+
+## Reference
+
+If you find OCB and the source code are useful, please cite our paper.
+
+    @inproceedings{dong2022cktgnn,
+  title={CktGNN: Circuit Graph Neural Network for Electronic Design Automation},
+  author={Dong, Zehao and Cao, Weidong and Zhang, Muhan and Tao, Dacheng and Chen, Yixin and Zhang, Xuan},
+  booktitle={The Eleventh International Conference on Learning Representations},
+  year={2022}}
+
+Zehao Dong, Washington University in St. Louis
+zehao.dong@wustl.edu
+Aug 31 2023
