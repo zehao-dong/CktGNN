@@ -196,6 +196,185 @@ def r_c_gm_extractor(g, subg_indi = SUBG_INDI):
                 v[name_indi[i]] = int(subg_feats[k])
     return g
 
+'''Network visualization'''
+def plot_circuits(g_pair, res_dir, name, backbone=False, data_type='igraph', pdf=False):
+    # backbone: puts all nodes in a straight line
+    file_name = os.path.join(res_dir, name+'.png')
+    if pdf:
+        file_name = os.path.join(res_dir, name+'.pdf')
+    if data_type == 'igraph':
+        draw_subg_ckt(g_pair[0], file_name, backbone)
+    elif data_type == 'pygraph':
+        draw_ckt(g_pair[1], file_name)
+    return file_name
+
+
+def draw_subg_ckt(g, path, backbone=False):
+    graph = pgv.AGraph(directed=True, strict=True, fontname='Helvetica', arrowtype='open')
+    if g is None:
+        add_subg_node(graph, 0, 0)
+        graph.layout(prog='dot')
+        graph.draw(path)
+        return
+    for idx in range(g.vcount()):
+        add_subg_node(graph, idx, g.vs[idx]['type'])
+    for idx in range(g.vcount()):
+        for node in g.get_adjlist(igraph.IN)[idx]:
+            if node == idx-1 and backbone:
+                graph.add_edge(node, idx, weight=1)
+            else:
+                graph.add_edge(node, idx, weight=0)
+    graph.layout(prog='dot')
+    graph.draw(path)
+
+
+def add_subg_node(graph, node_id, label, shape='box', style='filled'):
+    if label == 0:  
+        label = 'input'
+        color = 'orchid'
+    elif label == 1:
+        label = 'output'
+        color = 'pink'
+    elif label == 2:
+        label = 'R'
+        color = 'yellow'
+    elif label == 3:
+        label = 'C'
+        color = 'lawngreen'
+    elif label == 4:
+        label = 'R serie C'
+        color = 'greenyellow'
+    elif label == 5:
+        label = 'R paral C'
+        color = 'yellowgreen'
+    elif label == 6:
+        label = '+gm+'
+        color = 'cyan'
+    elif label == 7:
+        label = '-gm+'
+        color = 'lightblue'
+    elif label == 8:
+        label = '+gm-'
+        color = 'deepskyblue'
+    elif label == 9:
+        label = '-gm-'
+        color = 'dodgerblue'
+    elif label == 10:
+        label = 'C paral +gm+'
+        color = 'lime'
+    elif label == 11:
+        label = 'C paral -gm+'
+        color = 'seagreen'
+    elif label == 12:
+        label = 'C paral +gm-'
+        color = 'springgreen'
+    elif label == 13:
+        label = 'C paral -gm-'
+        color = 'limegreen'
+    elif label == 14:
+        label = 'R paral +gm+'
+        color = 'lightcoral'
+    elif label == 15:
+        label = 'R paral -gm+'
+        color = 'coral'
+    elif label == 16:
+        label = 'R paral +gm-'
+        color = 'salmon'
+    elif label == 17:
+        label = 'R paral gm-'
+        color = 'red'
+    elif label == 18:
+        label = 'R paral C paral +gm+'
+        color = 'darkorange'
+    elif label == 19:
+        label = 'R paral C paral -gm+'
+        color = 'bisque'
+    elif label == 20:
+        label = 'R paral C paral +gm-'
+        color = 'nawajowhite'
+    elif label == 21:
+        label = 'R paral C paral -gm-'
+        color = 'orange'
+    elif label == 22:
+        label = 'R serie C serie +gm+'
+        color = 'plum'
+    elif label == 23:
+        label = 'R serie C serie -gm+'
+        color = 'violet'
+    elif label == 24:
+        label = 'R serie C serie +gm-'
+        color = 'mediumpurple'
+    elif label == 25:
+        label = 'R serie C serie -gm-'
+        color = 'blueviolet'
+    else:
+        label = ''
+        color = 'aliceblue'
+    #label = f"{label}\n({node_id})"
+    label = f"{label}"
+    graph.add_node(
+            node_id, label=label, color='black', fillcolor=color,
+            shape=shape, style=style, fontsize=24)
+
+def draw_ckt(g, path, backbone=False):
+    graph = pgv.AGraph(directed=True, strict=True, fontname='Helvetica', arrowtype='open')
+    if g is None:
+        add_node(graph, 0, 0)
+        graph.layout(prog='dot')
+        graph.draw(path)
+        return
+    for idx in range(g.vcount()):
+        add_node(graph, idx, g.vs[idx]['type'])
+    for idx in range(g.vcount()):
+        for node in g.get_adjlist(igraph.IN)[idx]:
+            if node == idx-1 and backbone:
+                graph.add_edge(node, idx, weight=1)
+            else:
+                graph.add_edge(node, idx, weight=0)
+    graph.layout(prog='dot')
+    graph.draw(path)
+
+
+def add_node(graph, node_id, label, shape='box', style='filled'):
+    if label == 8:  
+        label = 'input'
+        color = 'orchid'
+    elif label == 9:
+        label = 'output'
+        color = 'pink'
+    elif label == 0:
+        label = 'R'
+        color = 'yellow'
+    elif label == 1:
+        label = 'C'
+        color = 'lawngreen'
+    elif label == 2:
+        label = '+gm+'
+        color = 'cyan'
+    elif label == 3:
+        label = '-gm+'
+        color = 'lightblue'
+    elif label == 4:
+        label = '+gm-'
+        color = 'deepskyblue'
+    elif label == 5:
+        label = '-gm-'
+        color = 'dodgerblue'
+    elif label == 6:
+        label = 'sudo_in'
+        color = 'silver'
+    elif label == 7:
+        label = 'sudo_out'
+        color = 'light_grey'
+    else:
+        label = ''
+        color = 'aliceblue'
+    #label = f"{label}\n({node_id})"
+    label = f"{label}"
+    graph.add_node(
+            node_id, label=label, color='black', fillcolor=color,
+            shape=shape, style=style, fontsize=24)
+
 # load datasets
 def train_test_generator_topo_simple(ng=10000, name='circuit_example'):
     g_list = []
