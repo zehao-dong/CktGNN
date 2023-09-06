@@ -26,7 +26,7 @@ CktGNN is a two-level GNN model with a pre-designed subgraph basis for the analo
 
 User can select different models (e.g. DVAE, DAGNN ..) and uses the corresponding save appendix (e.g. `--save-appendix _dvae`, `--save-appendix _dagnn` ) to store the results.
 
-* Run SGP regression to test whether the circuit encoder can generate a smooth latent space w.r.t. circuit properties. There are many circuit properties: FoM, Gain, Bw, Pm, while FoM is the most critical one. In circuit optimization, FoM characterizes the circuit quality and the obective is to maximize circuit's FoM.
+* Run SGP regression to test whether the circuit encoder can generate a smooth latent space w.r.t. circuit properties. There are many circuit properties: FoM, Gain, Bw, Pm, while FoM is the most critical one. In circuit optimization, FoM characterizes the circuit quality and the objective is to maximize circuit's FoM.
 
 `python sgp_regression.py --checkpoint 300 --save-appendix _cktgnn --model CktGNN --hs 301`
 
