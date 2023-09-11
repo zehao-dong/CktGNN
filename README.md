@@ -50,11 +50,11 @@ Please leave an issue if you have any trouble running the code or suggestions fo
 
 If you find OCB and the source code are useful, please cite our paper.
 
-    @inproceedings{dong2022cktgnn,
+    @article{dong2023cktgnn,
     title={CktGNN: Circuit Graph Neural Network for Electronic Design Automation},
     author={Dong, Zehao and Cao, Weidong and Zhang, Muhan and Tao, Dacheng and Chen, Yixin and Zhang, Xuan},
-    booktitle={The Eleventh International Conference on Learning Representations},
-    year={2022}
+    journal={arXiv preprint arXiv:2308.16406},
+    year={2023}
     }
 
 Zehao Dong, Washington University in St. Louis
