@@ -12,6 +12,8 @@ CktGNN is a two-level GNN model with a pre-designed subgraph basis for the analo
 
 * Source code (directory: `/OCB/src`): The source codes enable users to construct their own analog circuit datasets of arbitrary size. The directory `/OCB/src` provides simulation codes for circuit simulators. [/OCB/src/circuit_generation.py]( /OCB/src/circuit_generation.py) generates circuits and writes them in .txt file. [/OCB/src/utils_src.py](/OCB/src/utils_src.py) includes functions (train_test_generator_topo_simple) that convert the txt circuits and relevant simulation results to igraph data.
 
+* Tutorial (directory: `/OCB`): The tutorial [/OCB/Tutorial.pdf](/OCB/Tutorial.pdf) provides guidance of understanding the source code and implementing the performance simulation on circuit simulators.  
+
 
 ## Environment
 * Tested with Python 3.7, PyTorch 1.8.0, and PyTorch Geometric 1.7.2
